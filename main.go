@@ -20,5 +20,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("Read %d stations from csv file '%s'", len(allStations), csvFile.Name())
+	fmt.Printf("Read %d stations from csv file '%s'\n", len(allStations), csvFile.Name())
 }
