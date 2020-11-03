@@ -4,27 +4,47 @@ import (
 	"testing"
 )
 
-func TestMRTLine(t *testing.T) {
+func TestNewStationCodeSuccess(t *testing.T) {
 	for _, testCase := range []struct {
-		station  Station
-		expected string
+		input    string
+		expected StationCode
 	}{
 		{
-			station:  Station{},
-			expected: "",
+			input:    "TE1",
+			expected: StationCode{line: "TE", number: 1},
 		},
 		{
-			station:  Station{code: "TE1"},
-			expected: "TE",
+			input:    "te1",
+			expected: StationCode{line: "TE", number: 1},
 		},
 		{
-			station:  Station{code: "DT19"},
-			expected: "DT",
+			input:    "DT19",
+			expected: StationCode{line: "DT", number: 19},
 		},
 	} {
-		actual := testCase.station.MRTLine()
-		if actual != testCase.expected {
-			t.Errorf("expect: %s, actual: %s", testCase.expected, actual)
+		actual, err := NewStationCode(testCase.input)
+		if err != nil {
+			t.Error(err)
+		}
+		if testCase.expected != actual {
+			t.Errorf("expected: %v, actual: %v", testCase.expected, actual)
+		}
+	}
+}
+
+func TestNewStationCodeError(t *testing.T) {
+	for _, testCase := range []string{
+		"",
+		"DT",
+		"1",
+		"19",
+		"1DT",
+		"ABC1",
+		"DT888",
+	} {
+		_, err := NewStationCode(testCase)
+		if err == nil {
+			t.Errorf("expect error for input: %s", testCase)
 		}
 	}
 }

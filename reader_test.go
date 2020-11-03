@@ -19,22 +19,22 @@ func TestReadStations(t *testing.T) {
 				"EW26,Lakeside,5 November 1988\n",
 			expected: []Station{
 				Station{
-					code:        "EW23",
+					code:        StationCode{line: "EW", number: 23},
 					name:        "Clementi",
 					openingDate: time.Date(1988, 3, 12, 0, 0, 0, 0, time.UTC),
 				},
 				Station{
-					code:        "EW24",
+					code:        StationCode{line: "EW", number: 24},
 					name:        "Jurong East",
 					openingDate: time.Date(1988, 11, 5, 0, 0, 0, 0, time.UTC),
 				},
 				Station{
-					code:        "EW25",
+					code:        StationCode{line: "EW", number: 25},
 					name:        "Chinese Garden",
 					openingDate: time.Date(1988, 11, 5, 0, 0, 0, 0, time.UTC),
 				},
 				Station{
-					code:        "EW26",
+					code:        StationCode{line: "EW", number: 26},
 					name:        "Lakeside",
 					openingDate: time.Date(1988, 11, 5, 0, 0, 0, 0, time.UTC),
 				},

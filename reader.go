@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/csv"
+	"fmt"
 	"io"
 	"time"
 )
@@ -36,12 +37,19 @@ func ReadStations(r io.Reader) ([]Station, error) {
 	const openingDateFormat string = "2 January 2006"
 
 	for _, record := range records {
+		if len(record) != 3 {
+			return nil, fmt.Errorf("record lenth not 3: %v", record)
+		}
+		code, err := NewStationCode(record[0])
+		if err != nil {
+			return nil, err
+		}
 		openingDate, err := time.Parse(openingDateFormat, record[2])
 		if err != nil {
 			return nil, err
 		}
 		final = append(final, Station{
-			code:        record[0],
+			code:        code,
 			name:        record[1],
 			openingDate: openingDate,
 		})
