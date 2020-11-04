@@ -49,16 +49,16 @@ func TestLinkBoth(t *testing.T) {
 	g.LinkBoth(IntVertex(1), IntVertex(2), 1)
 	g.LinkBoth(IntVertex(2), IntVertex(3), 2)
 
-	expected := map[VertexID]map[VertexID]EdgeWeight{
-		1: map[VertexID]EdgeWeight{
-			2: EdgeWeight(1),
+	expected := map[VertexID]map[VertexID]Weight{
+		1: map[VertexID]Weight{
+			2: Weight(1),
 		},
-		2: map[VertexID]EdgeWeight{
-			1: EdgeWeight(1),
-			3: EdgeWeight(2),
+		2: map[VertexID]Weight{
+			1: Weight(1),
+			3: Weight(2),
 		},
-		3: map[VertexID]EdgeWeight{
-			2: EdgeWeight(2),
+		3: map[VertexID]Weight{
+			2: Weight(2),
 		},
 	}
 

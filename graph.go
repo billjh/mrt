@@ -8,21 +8,21 @@ type Vertex interface {
 	ID() VertexID
 }
 
-// EdgeWeight is assumed to be int.
-type EdgeWeight int
+// Weight is assumed to be int. It's used for edge weight and path weight.
+type Weight int
 
 // Graph contains all the Vertex references by a map accessed by ID.
 // It also stores the edges for each Vertex, which is a map of weights.
 type Graph struct {
 	vertices map[VertexID]*Vertex
-	edges    map[VertexID]map[VertexID]EdgeWeight
+	edges    map[VertexID]map[VertexID]Weight
 }
 
 // NewGraph creates an empty graph, and returns its reference.
 func NewGraph() *Graph {
 	return &Graph{
 		vertices: make(map[VertexID]*Vertex),
-		edges:    make(map[VertexID]map[VertexID]EdgeWeight),
+		edges:    make(map[VertexID]map[VertexID]Weight),
 	}
 }
 
@@ -32,12 +32,12 @@ func (g *Graph) Add(v Vertex) {
 	g.vertices[v.ID()] = &v
 	// initialize edges map if not done so
 	if g.edges[v.ID()] == nil {
-		g.edges[v.ID()] = make(map[VertexID]EdgeWeight)
+		g.edges[v.ID()] = make(map[VertexID]Weight)
 	}
 }
 
 // LinkBoth addes both vertices and the edges in bi-direction to the graph
-func (g *Graph) LinkBoth(v, u Vertex, w EdgeWeight) {
+func (g *Graph) LinkBoth(v, u Vertex, w Weight) {
 	g.Add(u)
 	g.Add(v)
 	g.edges[u.ID()][v.ID()] = w
@@ -47,5 +47,5 @@ func (g *Graph) LinkBoth(v, u Vertex, w EdgeWeight) {
 // Path records the stops and total weight in a graph from source to destination
 type Path struct {
 	stops  []VertexID
-	weight EdgeWeight
+	weight Weight
 }
