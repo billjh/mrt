@@ -24,7 +24,7 @@ type Graph struct {
 	edges    map[VertexID]map[VertexID]Weight
 }
 
-// NewGraph creates an empty graph, and returns its reference.
+// NewGraph creates an empty Graph, and returns its reference.
 func NewGraph() *Graph {
 	return &Graph{
 		vertices: make(map[VertexID]*Vertex),
@@ -32,7 +32,7 @@ func NewGraph() *Graph {
 	}
 }
 
-// Add a stand-alone vertex to the graph.
+// Add a stand-alone vertex to the Graph.
 func (g *Graph) Add(v Vertex) *Graph {
 	// add or replace reference to station
 	g.vertices[v.ID()] = &v
@@ -43,7 +43,7 @@ func (g *Graph) Add(v Vertex) *Graph {
 	return g
 }
 
-// LinkBoth addes both vertices and the edges in bi-direction to the graph
+// LinkBoth addes both vertices and the edges in bi-direction to the Graph
 func (g *Graph) LinkBoth(v, u Vertex, w Weight) *Graph {
 	g.Add(u)
 	g.Add(v)
@@ -52,10 +52,10 @@ func (g *Graph) LinkBoth(v, u Vertex, w Weight) *Graph {
 	return g
 }
 
-// Path records the stops from source to desination in a graph
+// Path records the stops from source to desination in a Graph
 type Path []VertexID
 
-// WeightedPath records the path with total weight from source to destination in a graph
+// WeightedPath records the path with total weight from source to destination in a Graph
 type WeightedPath struct {
 	path   Path
 	weight Weight
@@ -77,7 +77,7 @@ func validate(g *Graph, src, dest VertexID) error {
 
 // BFS finds the shortest path from source to destination and ignores edge weights.
 // It returns error when
-// 1) source or destination does not exist in the graph;
+// 1) source or destination does not exist in the Graph;
 // 2) source and destination are the same;
 // 3) no path is found.
 func (g *Graph) BFS(src, dest VertexID) (Path, error) {
@@ -104,9 +104,9 @@ func (g *Graph) BFS(src, dest VertexID) (Path, error) {
 	return nil, fmt.Errorf("no path is found")
 }
 
-// Dijkstra find the path with minimum weight from source to destination.
+// Dijkstra finds the path with minimum weight from source to destination in a Graph.
 // It returns error when
-// 1) source or destination does not exist in the graph;
+// 1) source or destination does not exist in the Graph;
 // 2) source and destination are the same;
 // 3) no path is found.
 func (g *Graph) Dijkstra(src, dest VertexID) (WeightedPath, error) {
@@ -146,9 +146,9 @@ func (g *Graph) Dijkstra(src, dest VertexID) (WeightedPath, error) {
 	return WeightedPath{}, fmt.Errorf("no path is found")
 }
 
-// DijkastraAll find all the paths from source to destination sorted by total weight in descending order.
-// It returns error when
-// 1) source or destination does not exist in the graph;
+// DijkastraAll finds all the paths from source to destination in a Graph and sorts them by
+// total weight in descending order. It returns error when
+// 1) source or destination does not exist in the Graph;
 // 2) source and destination are the same;
 // 3) no path is found.
 func (g *Graph) DijkastraAll(src, dest VertexID) ([]WeightedPath, error) {
@@ -238,13 +238,4 @@ func minDist(dist map[VertexID]Weight) VertexID {
 		}
 	}
 	return min
-}
-
-// totalWeight is a helper function which sums up the total weight in a path
-// and it assumes parameters are all valid
-func totalWeight(g *Graph, path Path) (total Weight) {
-	for i := 1; i < len(path); i++ {
-		total += g.edges[path[i-1]][path[i]]
-	}
-	return total
 }
