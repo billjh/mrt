@@ -57,13 +57,13 @@ func NewStationID(id string) (StationID, error) {
 
 // ReadStations reads the stations from the given io.Reader.
 // It assumes the format being:
-//
-// Station Code,Station Name,Opening Date
-// EW23,Clementi,12 March 1988
-// EW24,Jurong East,5 November 1988
-// EW25,Chinese Garden,5 November 1988
-// EW26,Lakeside,5 November 1988
-//
+/*
+Station Code,Station Name,Opening Date
+EW23,Clementi,12 March 1988
+EW24,Jurong East,5 November 1988
+EW25,Chinese Garden,5 November 1988
+EW26,Lakeside,5 November 1988
+*/
 func ReadStations(r io.Reader) ([]Station, error) {
 	csvReader := csv.NewReader(r)
 
