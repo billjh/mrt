@@ -20,6 +20,11 @@ type StationID struct {
 	number int
 }
 
+// String implements Stringer interface
+func (s StationID) String() string {
+	return s.line + strconv.Itoa(s.number)
+}
+
 // Station represents a MRT station in Singapore.
 type Station struct {
 	id          StationID
