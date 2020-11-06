@@ -159,12 +159,12 @@ func (g *Graph) Dijkstra(src, dest VertexID) (WeightedPath, error) {
 	return WeightedPath{}, ErrorPathNotFound
 }
 
-// DijkastraAll finds all the paths from source to destination in a Graph and sorts them by
+// DijkstraAll finds all the paths from source to destination in a Graph and sorts them by
 // total weight in descending order. It returns error when
 // 1) source or destination does not exist in the Graph;
 // 2) source and destination are the same;
 // 3) no path is found.
-func (g *Graph) DijkastraAll(src, dest VertexID) ([]WeightedPath, error) {
+func (g *Graph) DijkstraAll(src, dest VertexID) ([]WeightedPath, error) {
 	if err := validate(g, src, dest); err != nil {
 		return nil, err
 	}

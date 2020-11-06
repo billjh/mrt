@@ -121,7 +121,7 @@ func TestBFSError(t *testing.T) {
 	}
 }
 
-func TestDijkastraError(t *testing.T) {
+func TestDijkstraError(t *testing.T) {
 	for _, testCase := range expectedError {
 		_, err := testCase.g.Dijkstra(testCase.src, testCase.dest)
 		if err == nil {
@@ -130,9 +130,9 @@ func TestDijkastraError(t *testing.T) {
 	}
 }
 
-func TestDijkastraAllError(t *testing.T) {
+func TestDijkstraAllError(t *testing.T) {
 	for _, testCase := range expectedError {
-		_, err := testCase.g.DijkastraAll(testCase.src, testCase.dest)
+		_, err := testCase.g.DijkstraAll(testCase.src, testCase.dest)
 		if err == nil {
 			t.Errorf("expect error on %s", testCase.name)
 		}
@@ -226,7 +226,7 @@ var weightedTestCases = []struct {
 		},
 	}}
 
-func TestDijkastra(t *testing.T) {
+func TestDijkstra(t *testing.T) {
 	for _, testCase := range weightedTestCases {
 		expected := testCase.expected[0]
 		actual, err := testCase.g.Dijkstra(testCase.src, testCase.dest)
@@ -239,9 +239,9 @@ func TestDijkastra(t *testing.T) {
 	}
 }
 
-func TestDijkastraAll(t *testing.T) {
+func TestDijkstraAll(t *testing.T) {
 	for _, testCase := range weightedTestCases {
-		actual, err := testCase.g.DijkastraAll(testCase.src, testCase.dest)
+		actual, err := testCase.g.DijkstraAll(testCase.src, testCase.dest)
 		if err != nil {
 			t.Errorf("expected: %v, actual error: %s", testCase.expected, err)
 		}
