@@ -187,7 +187,7 @@ var weightedTestCases = []struct {
 		src:  1,
 		dest: 2,
 		expected: []WeightedPath{
-			WeightedPath{path: []Vertex{IntVertex(1), IntVertex(2)}, weight: 1},
+			WeightedPath{Path: []Vertex{IntVertex(1), IntVertex(2)}, Weight: 1},
 		},
 	},
 	{
@@ -200,8 +200,8 @@ var weightedTestCases = []struct {
 		src:  1,
 		dest: 3,
 		expected: []WeightedPath{
-			WeightedPath{path: []Vertex{IntVertex(1), IntVertex(5), IntVertex(4), IntVertex(3)}, weight: 3},
-			WeightedPath{path: []Vertex{IntVertex(1), IntVertex(2), IntVertex(3)}, weight: 4},
+			WeightedPath{Path: []Vertex{IntVertex(1), IntVertex(5), IntVertex(4), IntVertex(3)}, Weight: 3},
+			WeightedPath{Path: []Vertex{IntVertex(1), IntVertex(2), IntVertex(3)}, Weight: 4},
 		},
 	},
 	{
@@ -220,9 +220,9 @@ var weightedTestCases = []struct {
 		src:  1,
 		dest: 10,
 		expected: []WeightedPath{
-			WeightedPath{path: []Vertex{IntVertex(1), IntVertex(3), IntVertex(4), IntVertex(5), IntVertex(6), IntVertex(10)}, weight: 5},
-			WeightedPath{path: []Vertex{IntVertex(1), IntVertex(7), IntVertex(8), IntVertex(9), IntVertex(10)}, weight: 8},
-			WeightedPath{path: []Vertex{IntVertex(1), IntVertex(2), IntVertex(10)}, weight: 10},
+			WeightedPath{Path: []Vertex{IntVertex(1), IntVertex(3), IntVertex(4), IntVertex(5), IntVertex(6), IntVertex(10)}, Weight: 5},
+			WeightedPath{Path: []Vertex{IntVertex(1), IntVertex(7), IntVertex(8), IntVertex(9), IntVertex(10)}, Weight: 8},
+			WeightedPath{Path: []Vertex{IntVertex(1), IntVertex(2), IntVertex(10)}, Weight: 10},
 		},
 	}}
 

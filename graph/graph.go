@@ -58,8 +58,8 @@ type Path []Vertex
 
 // WeightedPath records the path with total weight from source to destination in a Graph
 type WeightedPath struct {
-	path   Path
-	weight Weight
+	Path   Path
+	Weight Weight
 }
 
 // ErrorSourceNotFound is returned by path-finding algorithms when source does not exist in graph.
@@ -140,8 +140,8 @@ func (g *Graph) Dijkstra(src, dest VertexID) (WeightedPath, error) {
 		if current == dest {
 			p := g.backtrack(current, parent)
 			return WeightedPath{
-				path:   p,
-				weight: currentWeight,
+				Path:   p,
+				Weight: currentWeight,
 			}, nil
 		}
 
@@ -202,8 +202,8 @@ func (g *Graph) DijkstraAll(src, dest VertexID) ([]WeightedPath, error) {
 				fmt.Println(current)
 				p := append(g.backtrack(current, parent), *g.Vertices[dest])
 				paths = append(paths, WeightedPath{
-					path:   p,
-					weight: currentWeight + edgeWeight,
+					Path:   p,
+					Weight: currentWeight + edgeWeight,
 				})
 			}
 
@@ -222,7 +222,7 @@ func (g *Graph) DijkstraAll(src, dest VertexID) ([]WeightedPath, error) {
 		return nil, ErrorPathNotFound
 	}
 	// sort the paths by weight in descending order
-	sort.Slice(paths, func(i, j int) bool { return paths[i].weight < paths[j].weight })
+	sort.Slice(paths, func(i, j int) bool { return paths[i].Weight < paths[j].Weight })
 	return paths, nil
 }
 
