@@ -21,25 +21,25 @@ type Weight int
 // Graph contains all the Vertex references by a map accessed by ID.
 // It also stores the edges for each Vertex, which is a map of weights.
 type Graph struct {
-	vertices map[VertexID]*Vertex
-	edges    map[VertexID]map[VertexID]Weight
+	Vertices map[VertexID]*Vertex
+	Edges    map[VertexID]map[VertexID]Weight
 }
 
 // NewGraph creates an empty Graph, and returns its reference.
 func NewGraph() *Graph {
 	return &Graph{
-		vertices: make(map[VertexID]*Vertex),
-		edges:    make(map[VertexID]map[VertexID]Weight),
+		Vertices: make(map[VertexID]*Vertex),
+		Edges:    make(map[VertexID]map[VertexID]Weight),
 	}
 }
 
 // Add a stand-alone vertex to the Graph.
 func (g *Graph) Add(v Vertex) *Graph {
 	// add or replace reference to station
-	g.vertices[v.ID()] = &v
+	g.Vertices[v.ID()] = &v
 	// initialize edges map if not done so
-	if g.edges[v.ID()] == nil {
-		g.edges[v.ID()] = make(map[VertexID]Weight)
+	if g.Edges[v.ID()] == nil {
+		g.Edges[v.ID()] = make(map[VertexID]Weight)
 	}
 	return g
 }
@@ -48,13 +48,13 @@ func (g *Graph) Add(v Vertex) *Graph {
 func (g *Graph) LinkBoth(v, u Vertex, w Weight) *Graph {
 	g.Add(u)
 	g.Add(v)
-	g.edges[u.ID()][v.ID()] = w
-	g.edges[v.ID()][u.ID()] = w
+	g.Edges[u.ID()][v.ID()] = w
+	g.Edges[v.ID()][u.ID()] = w
 	return g
 }
 
 // Path records the stops from source to desination in a Graph
-type Path []VertexID
+type Path []Vertex
 
 // WeightedPath records the path with total weight from source to destination in a Graph
 type WeightedPath struct {
@@ -76,10 +76,10 @@ var ErrorPathNotFound = errors.New("path no found")
 
 // validate the source and destination for path finding algorithms
 func validate(g *Graph, src, dest VertexID) error {
-	if _, ok := g.vertices[src]; !ok {
+	if _, ok := g.Vertices[src]; !ok {
 		return ErrorSourceNotFound
 	}
-	if _, ok := g.vertices[dest]; !ok {
+	if _, ok := g.Vertices[dest]; !ok {
 		return ErrorDestinationNotFound
 	}
 	if src == dest {
@@ -104,9 +104,9 @@ func (g *Graph) BFS(src, dest VertexID) (Path, error) {
 		current := queue[0]
 		queue = queue[1:]
 		if current == dest {
-			return backtrack(current, parent), nil
+			return g.backtrack(current, parent), nil
 		}
-		for neighbor := range g.edges[current] {
+		for neighbor := range g.Edges[current] {
 			if !visited[neighbor] {
 				parent[neighbor] = current
 				visited[neighbor] = true
@@ -138,14 +138,14 @@ func (g *Graph) Dijkstra(src, dest VertexID) (WeightedPath, error) {
 		visited[current] = true
 
 		if current == dest {
-			p := backtrack(current, parent)
+			p := g.backtrack(current, parent)
 			return WeightedPath{
 				path:   p,
 				weight: currentWeight,
 			}, nil
 		}
 
-		for neighbor, edgeWeight := range g.edges[current] {
+		for neighbor, edgeWeight := range g.Edges[current] {
 			if !visited[neighbor] {
 				alt := currentWeight + edgeWeight
 				neighborWeight, ok := dist[neighbor]
@@ -185,7 +185,7 @@ func (g *Graph) DijkastraAll(src, dest VertexID) ([]WeightedPath, error) {
 		if current == dest {
 			// only stop when all neighbors of dest have been visited
 			hasUnvisited := false
-			for neighbor := range g.edges[current] {
+			for neighbor := range g.Edges[current] {
 				if !visited[neighbor] {
 					hasUnvisited = true
 					break
@@ -196,11 +196,11 @@ func (g *Graph) DijkastraAll(src, dest VertexID) ([]WeightedPath, error) {
 			}
 		}
 
-		for neighbor, edgeWeight := range g.edges[current] {
+		for neighbor, edgeWeight := range g.Edges[current] {
 			// record down the all the paths
 			if neighbor == dest {
 				fmt.Println(current)
-				p := append(backtrack(current, parent), dest)
+				p := append(g.backtrack(current, parent), *g.Vertices[dest])
 				paths = append(paths, WeightedPath{
 					path:   p,
 					weight: currentWeight + edgeWeight,
@@ -227,11 +227,11 @@ func (g *Graph) DijkastraAll(src, dest VertexID) ([]WeightedPath, error) {
 }
 
 // backtrack is a helper function which constructs the path with parent map
-func backtrack(current VertexID, parent map[VertexID]VertexID) Path {
-	path := []VertexID{current}
+func (g *Graph) backtrack(current VertexID, parent map[VertexID]VertexID) Path {
+	path := []Vertex{*g.Vertices[current]}
 	for {
 		if p, ok := parent[current]; ok {
-			path = append([]VertexID{p}, path...)
+			path = append([]Vertex{*g.Vertices[p]}, path...)
 			current = p
 		} else {
 			return path

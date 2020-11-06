@@ -38,8 +38,8 @@ func TestAddVertex(t *testing.T) {
 		for _, v := range testCase.vertices {
 			g.Add(v)
 		}
-		if len(g.vertices) != testCase.expectedCount {
-			t.Errorf("expected count: %d, actual: %v", testCase.expectedCount, g.vertices)
+		if len(g.Vertices) != testCase.expectedCount {
+			t.Errorf("expected count: %d, actual: %v", testCase.expectedCount, g.Vertices)
 		}
 	}
 }
@@ -62,8 +62,8 @@ func TestLinkBoth(t *testing.T) {
 		},
 	}
 
-	if !reflect.DeepEqual(expected, g.edges) {
-		t.Errorf("expected: %v, actual: %v", expected, g.edges)
+	if !reflect.DeepEqual(expected, g.Edges) {
+		t.Errorf("expected: %v, actual: %v", expected, g.Edges)
 	}
 }
 
@@ -149,7 +149,7 @@ var unweightedTestCases = []struct {
 		g:        NewGraph().LinkBoth(IntVertex(1), IntVertex(2), 1),
 		src:      1,
 		dest:     2,
-		expected: []VertexID{1, 2},
+		expected: []Vertex{IntVertex(1), IntVertex(2)},
 	},
 	{
 		g: NewGraph().
@@ -160,7 +160,7 @@ var unweightedTestCases = []struct {
 			LinkBoth(IntVertex(5), IntVertex(1), 1),
 		src:      1,
 		dest:     4,
-		expected: []VertexID{1, 5, 4},
+		expected: []Vertex{IntVertex(1), IntVertex(5), IntVertex(4)},
 	},
 }
 
@@ -187,7 +187,7 @@ var weightedTestCases = []struct {
 		src:  1,
 		dest: 2,
 		expected: []WeightedPath{
-			WeightedPath{path: []VertexID{1, 2}, weight: 1},
+			WeightedPath{path: []Vertex{IntVertex(1), IntVertex(2)}, weight: 1},
 		},
 	},
 	{
@@ -200,8 +200,8 @@ var weightedTestCases = []struct {
 		src:  1,
 		dest: 3,
 		expected: []WeightedPath{
-			WeightedPath{path: []VertexID{1, 5, 4, 3}, weight: 3},
-			WeightedPath{path: []VertexID{1, 2, 3}, weight: 4},
+			WeightedPath{path: []Vertex{IntVertex(1), IntVertex(5), IntVertex(4), IntVertex(3)}, weight: 3},
+			WeightedPath{path: []Vertex{IntVertex(1), IntVertex(2), IntVertex(3)}, weight: 4},
 		},
 	},
 	{
@@ -220,9 +220,9 @@ var weightedTestCases = []struct {
 		src:  1,
 		dest: 10,
 		expected: []WeightedPath{
-			WeightedPath{path: []VertexID{1, 3, 4, 5, 6, 10}, weight: 5},
-			WeightedPath{path: []VertexID{1, 7, 8, 9, 10}, weight: 8},
-			WeightedPath{path: []VertexID{1, 2, 10}, weight: 10},
+			WeightedPath{path: []Vertex{IntVertex(1), IntVertex(3), IntVertex(4), IntVertex(5), IntVertex(6), IntVertex(10)}, weight: 5},
+			WeightedPath{path: []Vertex{IntVertex(1), IntVertex(7), IntVertex(8), IntVertex(9), IntVertex(10)}, weight: 8},
+			WeightedPath{path: []Vertex{IntVertex(1), IntVertex(2), IntVertex(10)}, weight: 10},
 		},
 	}}
 
