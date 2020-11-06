@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"io"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -104,4 +105,19 @@ func ReadStations(r io.Reader) ([]Station, error) {
 	}
 
 	return final, nil
+}
+
+// a helper function to load all stations from csv file
+func loadAllStations() []Station {
+	csvFile, err := os.Open("./data/StationMap.csv")
+	if err != nil {
+		panic(err)
+	}
+	defer csvFile.Close()
+
+	allStations, err := ReadStations(csvFile)
+	if err != nil {
+		panic(err)
+	}
+	return allStations
 }
