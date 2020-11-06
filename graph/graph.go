@@ -1,6 +1,7 @@
-package main
+package graph
 
 import (
+	"errors"
 	"fmt"
 	"math"
 	"sort"
@@ -61,16 +62,28 @@ type WeightedPath struct {
 	weight Weight
 }
 
+// ErrorSourceNotFound is returned by path-finding algorithms when source does not exist in graph.
+var ErrorSourceNotFound = errors.New("source not found in graph")
+
+// ErrorDestinationNotFound is returned by path-finding algorithms when destination does not exist in graph.
+var ErrorDestinationNotFound = errors.New("destination not found in graph")
+
+// ErrorSourceDestinationSame is returned by path-finding algorithms when source and destinatino is the same.
+var ErrorSourceDestinationSame = errors.New("source and destination are the same")
+
+// ErrorPathNotFound is returned by path-finding algorithms when no path exists.
+var ErrorPathNotFound = errors.New("path no found")
+
 // validate the source and destination for path finding algorithms
 func validate(g *Graph, src, dest VertexID) error {
 	if _, ok := g.vertices[src]; !ok {
-		return fmt.Errorf("source doesn't exist in graph")
+		return ErrorSourceNotFound
 	}
 	if _, ok := g.vertices[dest]; !ok {
-		return fmt.Errorf("destination doesn't exist in graph")
+		return ErrorDestinationNotFound
 	}
 	if src == dest {
-		return fmt.Errorf("source and destination can not be the same")
+		return ErrorSourceDestinationSame
 	}
 	return nil
 }
@@ -101,7 +114,7 @@ func (g *Graph) BFS(src, dest VertexID) (Path, error) {
 			}
 		}
 	}
-	return nil, fmt.Errorf("no path is found")
+	return nil, ErrorPathNotFound
 }
 
 // Dijkstra finds the path with minimum weight from source to destination in a Graph.
@@ -143,7 +156,7 @@ func (g *Graph) Dijkstra(src, dest VertexID) (WeightedPath, error) {
 			}
 		}
 	}
-	return WeightedPath{}, fmt.Errorf("no path is found")
+	return WeightedPath{}, ErrorPathNotFound
 }
 
 // DijkastraAll finds all the paths from source to destination in a Graph and sorts them by
@@ -206,7 +219,7 @@ func (g *Graph) DijkastraAll(src, dest VertexID) ([]WeightedPath, error) {
 	}
 	// returns error if no path is found
 	if len(paths) == 0 {
-		return nil, fmt.Errorf("no path is found")
+		return nil, ErrorPathNotFound
 	}
 	// sort the paths by weight in descending order
 	sort.Slice(paths, func(i, j int) bool { return paths[i].weight < paths[j].weight })
