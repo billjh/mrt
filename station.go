@@ -8,39 +8,46 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/billjh/zendesk-mrt/graph"
 )
 
-// StationCode is the code for a MRT station in Singapore.
-// It consists of two fields, 2-alphabet MRT line and int station number.
-// For example, StationCode{line: "EW", number: 14}
-type StationCode struct {
+// StationID is the code for a MRT station in Singapore.
+// It consists of 2-letter line code and number.
+// For example, StationID{line: "EW", number: 14}
+type StationID struct {
 	line   string
 	number int
 }
 
 // Station represents a MRT station in Singapore.
 type Station struct {
-	code        StationCode
+	id          StationID
 	name        string
 	openingDate time.Time
 }
 
-// NewStationCode constructs a StationCode from string
+// ID implements graph.Vertex interface
+func (s Station) ID() graph.VertexID {
+	return s.id
+}
+
+// NewStationID constructs a StationID from string
 // and returns error on invalid format.
-func NewStationCode(code string) (StationCode, error) {
-	matched, err := regexp.MatchString(`^[a-zA-Z]{2}\d{1,2}$`, code)
+func NewStationID(id string) (StationID, error) {
+	matched, err := regexp.MatchString(`^[a-zA-Z]{2}\d{1,2}$`, id)
 	if err != nil {
-		return StationCode{}, err
+		return StationID{}, err
 	}
 	if !matched {
-		return StationCode{}, fmt.Errorf("invalid station code %s", code)
+		return StationID{}, fmt.Errorf("invalid station id %s", id)
 	}
-	number, err := strconv.Atoi(code[2:])
+	number, err := strconv.Atoi(id[2:])
 	if err != nil {
 		// this shouldn't happen though
-		return StationCode{}, err
+		return StationID{}, err
 	}
-	return StationCode{line: strings.ToUpper(code[:2]), number: number}, nil
+	return StationID{line: strings.ToUpper(id[:2]), number: number}, nil
 }
 
 // ReadStations reads the stations from the given io.Reader.
@@ -76,7 +83,7 @@ func ReadStations(r io.Reader) ([]Station, error) {
 		if len(record) != 3 {
 			return nil, fmt.Errorf("record lenth not 3: %v", record)
 		}
-		code, err := NewStationCode(record[0])
+		id, err := NewStationID(record[0])
 		if err != nil {
 			return nil, err
 		}
@@ -85,7 +92,7 @@ func ReadStations(r io.Reader) ([]Station, error) {
 			return nil, err
 		}
 		final = append(final, Station{
-			code:        code,
+			id:          id,
 			name:        record[1],
 			openingDate: openingDate,
 		})

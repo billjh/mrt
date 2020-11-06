@@ -6,25 +6,25 @@ import (
 	"time"
 )
 
-func TestNewStationCodeSuccess(t *testing.T) {
+func TestNewStationIDSuccess(t *testing.T) {
 	for _, testCase := range []struct {
 		input    string
-		expected StationCode
+		expected StationID
 	}{
 		{
 			input:    "TE1",
-			expected: StationCode{line: "TE", number: 1},
+			expected: StationID{line: "TE", number: 1},
 		},
 		{
 			input:    "te1",
-			expected: StationCode{line: "TE", number: 1},
+			expected: StationID{line: "TE", number: 1},
 		},
 		{
 			input:    "DT19",
-			expected: StationCode{line: "DT", number: 19},
+			expected: StationID{line: "DT", number: 19},
 		},
 	} {
-		actual, err := NewStationCode(testCase.input)
+		actual, err := NewStationID(testCase.input)
 		if err != nil {
 			t.Error(err)
 		}
@@ -34,7 +34,7 @@ func TestNewStationCodeSuccess(t *testing.T) {
 	}
 }
 
-func TestNewStationCodeError(t *testing.T) {
+func TestNewStationIDError(t *testing.T) {
 	for _, testCase := range []string{
 		"",
 		"DT",
@@ -44,7 +44,7 @@ func TestNewStationCodeError(t *testing.T) {
 		"ABC1",
 		"DT888",
 	} {
-		_, err := NewStationCode(testCase)
+		_, err := NewStationID(testCase)
 		if err == nil {
 			t.Errorf("expect error for input: %s", testCase)
 		}
@@ -64,22 +64,22 @@ func TestReadStations(t *testing.T) {
 				"EW26,Lakeside,5 November 1988\n",
 			expected: []Station{
 				Station{
-					code:        StationCode{line: "EW", number: 23},
+					id:          StationID{line: "EW", number: 23},
 					name:        "Clementi",
 					openingDate: time.Date(1988, 3, 12, 0, 0, 0, 0, time.UTC),
 				},
 				Station{
-					code:        StationCode{line: "EW", number: 24},
+					id:          StationID{line: "EW", number: 24},
 					name:        "Jurong East",
 					openingDate: time.Date(1988, 11, 5, 0, 0, 0, 0, time.UTC),
 				},
 				Station{
-					code:        StationCode{line: "EW", number: 25},
+					id:          StationID{line: "EW", number: 25},
 					name:        "Chinese Garden",
 					openingDate: time.Date(1988, 11, 5, 0, 0, 0, 0, time.UTC),
 				},
 				Station{
-					code:        StationCode{line: "EW", number: 26},
+					id:          StationID{line: "EW", number: 26},
 					name:        "Lakeside",
 					openingDate: time.Date(1988, 11, 5, 0, 0, 0, 0, time.UTC),
 				},
