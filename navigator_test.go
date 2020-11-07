@@ -4,8 +4,6 @@ import (
 	"reflect"
 	"testing"
 	"time"
-
-	"github.com/billjh/zendesk-mrt/graph"
 )
 
 // Peak hours (6am-9am and 6pm-9pm on Mon-Fri)
@@ -97,7 +95,7 @@ func TestTravelPeriod(t *testing.T) {
 func TestBuildGraph(t *testing.T) {
 	travelCost := TravelCostByTime{
 		interchange: 1,
-		lines: map[string]graph.Weight{
+		lines: map[string]Weight{
 			"NE": 3,
 		},
 		lineDefault: 2,
@@ -126,20 +124,20 @@ func TestBuildGraph(t *testing.T) {
 	}
 	g := buildGraph(stations, travelCost)
 
-	// need to use the type same as graph.Graph.Edges
-	expectedEdges := map[graph.VertexID]map[graph.VertexID]graph.Weight{
-		StationID{line: "NE", number: 5}: map[graph.VertexID]graph.Weight{
+	// need to use the type same as Graph.Edges
+	expectedEdges := map[VertexID]map[VertexID]Weight{
+		StationID{line: "NE", number: 5}: map[VertexID]Weight{
 			StationID{line: "NE", number: 6}: 3,
 		},
-		StationID{line: "NE", number: 6}: map[graph.VertexID]graph.Weight{
+		StationID{line: "NE", number: 6}: map[VertexID]Weight{
 			StationID{line: "NE", number: 5}: 3,
 			StationID{line: "CC", number: 1}: 1,
 		},
-		StationID{line: "CC", number: 1}: map[graph.VertexID]graph.Weight{
+		StationID{line: "CC", number: 1}: map[VertexID]Weight{
 			StationID{line: "NE", number: 6}: 1,
 			StationID{line: "CC", number: 2}: 2,
 		},
-		StationID{line: "CC", number: 2}: map[graph.VertexID]graph.Weight{
+		StationID{line: "CC", number: 2}: map[VertexID]Weight{
 			StationID{line: "CC", number: 1}: 2,
 		},
 	}
@@ -180,7 +178,7 @@ func TestByTime(t *testing.T) {
 		dest     StationID
 		timeStr  string
 		expected []string
-		weight   graph.Weight
+		weight   Weight
 	}{
 		{
 			src:      StationID{line: "EW", number: 27},
@@ -228,7 +226,7 @@ func TestByTimeAll(t *testing.T) {
 	dest := StationID{line: "EW", number: 15}
 	expected := []struct {
 		path   []string
-		weight graph.Weight
+		weight Weight
 	}{
 		{
 			path:   []string{"DT1", "DT2", "DT3", "DT5", "DT6", "DT7", "DT8", "DT9", "DT10", "DT11", "DT12", "DT13", "DT14", "EW12", "EW13", "EW14", "EW15"},
@@ -245,12 +243,12 @@ func TestByTimeAll(t *testing.T) {
 	}
 	actual := []struct {
 		path   []string
-		weight graph.Weight
+		weight Weight
 	}{}
 	for _, p := range paths {
 		actual = append(actual, struct {
 			path   []string
-			weight graph.Weight
+			weight Weight
 		}{
 			path:   pathToStringSlice(p.Stops),
 			weight: p.Weight,
@@ -261,8 +259,8 @@ func TestByTimeAll(t *testing.T) {
 	}
 }
 
-// pathToStringSlice is a helper function convert graph.Path to station codes in string
-func pathToStringSlice(path []graph.Vertex) []string {
+// pathToStringSlice is a helper function convert Path to station codes in string
+func pathToStringSlice(path []Vertex) []string {
 	actual := []string{}
 	for _, s := range path {
 		actual = append(actual, s.(Station).id.String())

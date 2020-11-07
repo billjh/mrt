@@ -2,39 +2,37 @@ package main
 
 import (
 	"time"
-
-	"github.com/billjh/zendesk-mrt/graph"
 )
 
 // TravelCost is an interface type for getting cost of travel between Stations
 type TravelCost interface {
-	Interchange() graph.Weight
-	OnLine(line string) graph.Weight
+	Interchange() Weight
+	OnLine(line string) Weight
 }
 
 // TravelCostByStop gives cost 1 for both interchange and travel on line
 type TravelCostByStop struct{}
 
 // Interchange implements TravelCost interface
-func (c TravelCostByStop) Interchange() graph.Weight { return 1 }
+func (c TravelCostByStop) Interchange() Weight { return 1 }
 
 // OnLine implements TravelCost interface
-func (c TravelCostByStop) OnLine(_ string) graph.Weight { return 1 }
+func (c TravelCostByStop) OnLine(_ string) Weight { return 1 }
 
 // TravelCostByTime contains costs for interchange and travel on line
 type TravelCostByTime struct {
-	interchange graph.Weight
-	lines       map[string]graph.Weight
-	lineDefault graph.Weight
+	interchange Weight
+	lines       map[string]Weight
+	lineDefault Weight
 }
 
 // Interchange implements TravelCost interface
-func (c TravelCostByTime) Interchange() graph.Weight {
+func (c TravelCostByTime) Interchange() Weight {
 	return c.interchange
 }
 
 // OnLine implements TravelCost interface
-func (c TravelCostByTime) OnLine(line string) graph.Weight {
+func (c TravelCostByTime) OnLine(line string) Weight {
 	if w, ok := c.lines[line]; ok {
 		return w
 	}
@@ -43,7 +41,7 @@ func (c TravelCostByTime) OnLine(line string) graph.Weight {
 
 var travelCostPeakHours = TravelCostByTime{
 	interchange: 15,
-	lines: map[string]graph.Weight{
+	lines: map[string]Weight{
 		"NS": 12,
 		"NE": 12,
 	},
@@ -52,7 +50,7 @@ var travelCostPeakHours = TravelCostByTime{
 
 var travelCostNightHours = TravelCostByTime{
 	interchange: 10,
-	lines: map[string]graph.Weight{
+	lines: map[string]Weight{
 		"TE": 8,
 	},
 	lineDefault: 10,
@@ -60,7 +58,7 @@ var travelCostNightHours = TravelCostByTime{
 
 var travelCostNonPeakHours = TravelCostByTime{
 	interchange: 10,
-	lines: map[string]graph.Weight{
+	lines: map[string]Weight{
 		"DT": 8,
 		"TE": 8,
 	},

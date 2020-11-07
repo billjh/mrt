@@ -9,8 +9,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/billjh/zendesk-mrt/graph"
 )
 
 // StationID is the code for a MRT station in Singapore.
@@ -34,7 +32,7 @@ type Station struct {
 }
 
 // ID implements graph.Vertex interface
-func (s Station) ID() graph.VertexID {
+func (s Station) ID() VertexID {
 	return s.id
 }
 

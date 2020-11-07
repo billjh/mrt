@@ -3,8 +3,6 @@ package main
 import (
 	"sort"
 	"time"
-
-	"github.com/billjh/zendesk-mrt/graph"
 )
 
 // Navigator holds a map of all Stations and provides multiple navigating methods
@@ -22,7 +20,7 @@ func NewNavigator() *Navigator {
 // byStops gives the shortest pathes by number of stops, or any error encountered.
 // If all is set false, return the shortest path by Graph.BFS; otherwise return all pathes
 // ordered by number of stops by Graph.DijkstraAll
-func (n *Navigator) byStops(src, dest StationID, all bool) ([]graph.Path, error) {
+func (n *Navigator) byStops(src, dest StationID, all bool) ([]Path, error) {
 	g := buildGraph(n.allStations, TravelCostByStop{})
 
 	if all {
@@ -30,13 +28,13 @@ func (n *Navigator) byStops(src, dest StationID, all bool) ([]graph.Path, error)
 	}
 
 	p, err := g.BFS(src, dest)
-	return []graph.Path{p}, err
+	return []Path{p}, err
 }
 
 // byTime gives the fatest pathes by time taken, or any error encountered, knowing the time of travel.
 // If all is set false, return the fastest path by Graph.Dijkstra; otherwise return all pathes
 // ordered by time take with Graph.DijkstraAll
-func (n *Navigator) byTime(src, dest StationID, t time.Time, all bool) ([]graph.Path, error) {
+func (n *Navigator) byTime(src, dest StationID, t time.Time, all bool) ([]Path, error) {
 	// get opening stations at the time of travel
 	openingStations := []Station{}
 	for _, station := range n.allStations {
@@ -59,7 +57,7 @@ func (n *Navigator) byTime(src, dest StationID, t time.Time, all bool) ([]graph.
 
 	p, err := g.Dijkstra(src, dest)
 
-	return []graph.Path{p}, err
+	return []Path{p}, err
 }
 
 // buildGraph takes a list of Stations and connects them in a Graph:
@@ -70,8 +68,8 @@ func (n *Navigator) byTime(src, dest StationID, t time.Time, all bool) ([]graph.
 // 2) Stations with the same name but different StationIDs will be treated as
 // interchange stations, so they will be connected to each other
 // eg. NS24 Dhoby Ghaut <-> CC1 Dhoby Ghaut <-> NE6 Dhoby Ghaut (<-> NS24 Dhoby Ghaut)
-func buildGraph(stations []Station, cost TravelCost) *graph.Graph {
-	g := graph.NewGraph()
+func buildGraph(stations []Station, cost TravelCost) *Graph {
+	g := NewGraph()
 
 	// add all Stations as graph vertices
 	for _, s := range stations {
