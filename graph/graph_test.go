@@ -149,7 +149,7 @@ var unweightedTestCases = []struct {
 		g:        NewGraph().LinkBoth(IntVertex(1), IntVertex(2), 1),
 		src:      1,
 		dest:     2,
-		expected: []Vertex{IntVertex(1), IntVertex(2)},
+		expected: Path{Stops: []Vertex{IntVertex(1), IntVertex(2)}, Weight: 1},
 	},
 	{
 		g: NewGraph().
@@ -160,7 +160,7 @@ var unweightedTestCases = []struct {
 			LinkBoth(IntVertex(5), IntVertex(1), 1),
 		src:      1,
 		dest:     4,
-		expected: []Vertex{IntVertex(1), IntVertex(5), IntVertex(4)},
+		expected: Path{Stops: []Vertex{IntVertex(1), IntVertex(5), IntVertex(4)}, Weight: 2},
 	},
 }
 
@@ -180,14 +180,14 @@ var weightedTestCases = []struct {
 	g        *Graph
 	src      VertexID
 	dest     VertexID
-	expected []WeightedPath
+	expected []Path
 }{
 	{
 		g:    NewGraph().LinkBoth(IntVertex(1), IntVertex(2), 1),
 		src:  1,
 		dest: 2,
-		expected: []WeightedPath{
-			WeightedPath{Path: []Vertex{IntVertex(1), IntVertex(2)}, Weight: 1},
+		expected: []Path{
+			Path{Stops: []Vertex{IntVertex(1), IntVertex(2)}, Weight: 1},
 		},
 	},
 	{
@@ -199,9 +199,9 @@ var weightedTestCases = []struct {
 			LinkBoth(IntVertex(5), IntVertex(1), 1),
 		src:  1,
 		dest: 3,
-		expected: []WeightedPath{
-			WeightedPath{Path: []Vertex{IntVertex(1), IntVertex(5), IntVertex(4), IntVertex(3)}, Weight: 3},
-			WeightedPath{Path: []Vertex{IntVertex(1), IntVertex(2), IntVertex(3)}, Weight: 4},
+		expected: []Path{
+			Path{Stops: []Vertex{IntVertex(1), IntVertex(5), IntVertex(4), IntVertex(3)}, Weight: 3},
+			Path{Stops: []Vertex{IntVertex(1), IntVertex(2), IntVertex(3)}, Weight: 4},
 		},
 	},
 	{
@@ -219,10 +219,10 @@ var weightedTestCases = []struct {
 			LinkBoth(IntVertex(9), IntVertex(10), 2),
 		src:  1,
 		dest: 10,
-		expected: []WeightedPath{
-			WeightedPath{Path: []Vertex{IntVertex(1), IntVertex(3), IntVertex(4), IntVertex(5), IntVertex(6), IntVertex(10)}, Weight: 5},
-			WeightedPath{Path: []Vertex{IntVertex(1), IntVertex(7), IntVertex(8), IntVertex(9), IntVertex(10)}, Weight: 8},
-			WeightedPath{Path: []Vertex{IntVertex(1), IntVertex(2), IntVertex(10)}, Weight: 10},
+		expected: []Path{
+			Path{Stops: []Vertex{IntVertex(1), IntVertex(3), IntVertex(4), IntVertex(5), IntVertex(6), IntVertex(10)}, Weight: 5},
+			Path{Stops: []Vertex{IntVertex(1), IntVertex(7), IntVertex(8), IntVertex(9), IntVertex(10)}, Weight: 8},
+			Path{Stops: []Vertex{IntVertex(1), IntVertex(2), IntVertex(10)}, Weight: 10},
 		},
 	}}
 

@@ -53,12 +53,9 @@ func (g *Graph) LinkBoth(v, u Vertex, w Weight) *Graph {
 	return g
 }
 
-// Path records the stops from source to desination in a Graph
-type Path []Vertex
-
-// WeightedPath records the path with total weight from source to destination in a Graph
-type WeightedPath struct {
-	Path   Path
+// Path records the stop and total weight from source to destination in a Graph
+type Path struct {
+	Stops  []Vertex
 	Weight Weight
 }
 
@@ -104,7 +101,8 @@ func (g *Graph) BFS(src, dest VertexID) (Path, error) {
 		current := queue[0]
 		queue = queue[1:]
 		if current == dest {
-			return g.backtrack(current, parent), nil
+			path := g.backtrack(current, parent)
+			return Path{Stops: path, Weight: Weight(len(path) - 1)}, nil
 		}
 		for neighbor := range g.Edges[current] {
 			if !visited[neighbor] {
@@ -114,7 +112,7 @@ func (g *Graph) BFS(src, dest VertexID) (Path, error) {
 			}
 		}
 	}
-	return nil, ErrorPathNotFound
+	return Path{}, ErrorPathNotFound
 }
 
 // Dijkstra finds the path with minimum weight from source to destination in a Graph.
@@ -122,9 +120,9 @@ func (g *Graph) BFS(src, dest VertexID) (Path, error) {
 // 1) source or destination does not exist in the Graph;
 // 2) source and destination are the same;
 // 3) no path is found.
-func (g *Graph) Dijkstra(src, dest VertexID) (WeightedPath, error) {
+func (g *Graph) Dijkstra(src, dest VertexID) (Path, error) {
 	if err := validate(g, src, dest); err != nil {
-		return WeightedPath{}, err
+		return Path{}, err
 	}
 	parent := make(map[VertexID]VertexID)
 	visited := map[VertexID]bool{src: true}
@@ -139,8 +137,8 @@ func (g *Graph) Dijkstra(src, dest VertexID) (WeightedPath, error) {
 
 		if current == dest {
 			p := g.backtrack(current, parent)
-			return WeightedPath{
-				Path:   p,
+			return Path{
+				Stops:  p,
 				Weight: currentWeight,
 			}, nil
 		}
@@ -156,7 +154,7 @@ func (g *Graph) Dijkstra(src, dest VertexID) (WeightedPath, error) {
 			}
 		}
 	}
-	return WeightedPath{}, ErrorPathNotFound
+	return Path{}, ErrorPathNotFound
 }
 
 // DijkstraAll finds all the paths from source to destination in a Graph and sorts them by
@@ -164,12 +162,12 @@ func (g *Graph) Dijkstra(src, dest VertexID) (WeightedPath, error) {
 // 1) source or destination does not exist in the Graph;
 // 2) source and destination are the same;
 // 3) no path is found.
-func (g *Graph) DijkstraAll(src, dest VertexID) ([]WeightedPath, error) {
+func (g *Graph) DijkstraAll(src, dest VertexID) ([]Path, error) {
 	if err := validate(g, src, dest); err != nil {
 		return nil, err
 	}
 
-	paths := []WeightedPath{}
+	paths := []Path{}
 
 	parent := make(map[VertexID]VertexID)
 	visited := map[VertexID]bool{src: true}
@@ -201,8 +199,8 @@ func (g *Graph) DijkstraAll(src, dest VertexID) ([]WeightedPath, error) {
 			if neighbor == dest {
 				fmt.Println(current)
 				p := append(g.backtrack(current, parent), *g.Vertices[dest])
-				paths = append(paths, WeightedPath{
-					Path:   p,
+				paths = append(paths, Path{
+					Stops:  p,
 					Weight: currentWeight + edgeWeight,
 				})
 			}
@@ -227,7 +225,7 @@ func (g *Graph) DijkstraAll(src, dest VertexID) ([]WeightedPath, error) {
 }
 
 // backtrack is a helper function which constructs the path with parent map
-func (g *Graph) backtrack(current VertexID, parent map[VertexID]VertexID) Path {
+func (g *Graph) backtrack(current VertexID, parent map[VertexID]VertexID) []Vertex {
 	path := []Vertex{*g.Vertices[current]}
 	for {
 		if p, ok := parent[current]; ok {

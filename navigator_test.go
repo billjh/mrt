@@ -164,10 +164,7 @@ func TestByStops(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
-		actual := []string{}
-		for _, s := range path {
-			actual = append(actual, s.(Station).id.String())
-		}
+		actual := pathToStringSlice(path.Stops)
 		if !reflect.DeepEqual(testCase.expected, actual) {
 			t.Errorf("expected: %v, actual: %v", testCase.expected, actual)
 		}
@@ -175,35 +172,61 @@ func TestByStops(t *testing.T) {
 }
 
 func TestByTime(t *testing.T) {
+	peakHours := "2020-11-09T06:01"
+	nightHours := "2020-11-09T05:59"
+	nonPeakHours := "2020-11-08T06:01"
 	for _, testCase := range []struct {
 		src      StationID
 		dest     StationID
 		timeStr  string
 		expected []string
-		weight   int
+		weight   graph.Weight
 	}{
 		{
 			src:      StationID{line: "EW", number: 27},
 			dest:     StationID{line: "DT", number: 12},
-			timeStr:  "2020-11-09T06:01",
+			timeStr:  peakHours,
 			expected: []string{"EW27", "EW26", "EW25", "EW24", "EW23", "EW22", "EW21", "CC22", "CC21", "CC20", "CC19", "DT9", "DT10", "DT11", "DT12"},
 			weight:   150,
+		},
+		{
+			src:      StationID{line: "CC", number: 19},
+			dest:     StationID{line: "CC", number: 4},
+			timeStr:  nonPeakHours,
+			expected: []string{"CC19", "DT9", "DT10", "DT11", "DT12", "DT13", "DT14", "DT15", "CC4"},
+			weight:   68,
+		},
+		{
+			src:      StationID{line: "CC", number: 19},
+			dest:     StationID{line: "CC", number: 4},
+			timeStr:  nightHours,
+			expected: []string{"CC19", "CC17", "CC16", "CC15", "CC14", "CC13", "CC12", "CC11", "CC10", "CC9", "CC8", "CC7", "CC6", "CC5", "CC4"},
+			weight:   140,
 		},
 	} {
 		travelTime, err := time.Parse("2006-01-02T15:04", testCase.timeStr)
 		if err != nil {
 			t.Error(err)
 		}
-		path, err := NewNavigator().ByTime(testCase.src, testCase.dest, travelTime)
+		path, err := NewNavigator().ByTime(testCase.src, testCase.dest, travelTime, false)
 		if err != nil {
 			t.Error(err)
 		}
-		actual := []string{}
-		for _, s := range path.Path {
-			actual = append(actual, s.(Station).id.String())
-		}
+		actual := pathToStringSlice(path[0].Stops)
 		if !reflect.DeepEqual(testCase.expected, actual) {
-			t.Errorf("expected: %v, actual: %v", testCase.expected, actual)
+			t.Errorf("\nexpected: %v, \n  actual: %v", testCase.expected, actual)
+		}
+		if path[0].Weight != testCase.weight {
+			t.Errorf("travel time expected: %d, actual: %d", testCase.weight, path[0].Weight)
 		}
 	}
+}
+
+// pathToStringSlice is a helper function convert graph.Path to station codes in string
+func pathToStringSlice(path []graph.Vertex) []string {
+	actual := []string{}
+	for _, s := range path {
+		actual = append(actual, s.(Station).id.String())
+	}
+	return actual
 }
