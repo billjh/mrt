@@ -64,7 +64,11 @@ func (n *Navigator) NavigateByStops(srcStr, destStr string, all bool) ([]Path, e
 	}
 
 	sort.Slice(paths, func(i, j int) bool { return paths[i].Weight < paths[j].Weight })
-	return paths, nil
+
+	if all {
+		return paths, nil
+	}
+	return paths[:1], nil
 }
 
 // NavigateByTime returns fastest paths between two Stations or any error encountered, knowing the
@@ -129,7 +133,11 @@ func (n *Navigator) NavigateByTime(srcStr, destStr string, t time.Time, all bool
 	}
 
 	sort.Slice(paths, func(i, j int) bool { return paths[i].Weight < paths[j].Weight })
-	return paths, nil
+
+	if all {
+		return paths, nil
+	}
+	return paths[:1], nil
 }
 
 // buildGraph takes a list of Stations and connects them in a Graph:
