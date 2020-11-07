@@ -160,11 +160,11 @@ func TestByStops(t *testing.T) {
 			expected: []string{"CC21", "CC20", "CC19", "DT9", "DT10", "DT11", "DT12", "DT13", "DT14"},
 		},
 	} {
-		path, err := NewNavigator().ByStops(testCase.src, testCase.dest)
+		path, err := NewNavigator().byStops(testCase.src, testCase.dest, false)
 		if err != nil {
 			t.Error(err)
 		}
-		actual := pathToStringSlice(path.Stops)
+		actual := pathToStringSlice(path[0].Stops)
 		if !reflect.DeepEqual(testCase.expected, actual) {
 			t.Errorf("expected: %v, actual: %v", testCase.expected, actual)
 		}
@@ -208,7 +208,7 @@ func TestByTime(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
-		path, err := NewNavigator().ByTime(testCase.src, testCase.dest, travelTime, false)
+		path, err := NewNavigator().byTime(testCase.src, testCase.dest, travelTime, false)
 		if err != nil {
 			t.Error(err)
 		}
@@ -239,7 +239,7 @@ func TestByTimeAll(t *testing.T) {
 			weight: 188,
 		},
 	}
-	paths, err := NewNavigator().ByTime(src, dest, peakHours, true)
+	paths, err := NewNavigator().byTime(src, dest, peakHours, true)
 	if err != nil {
 		t.Error(err)
 	}

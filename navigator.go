@@ -19,15 +19,24 @@ func NewNavigator() *Navigator {
 	}
 }
 
-// ByStops gives the shortest path by number of stops, or any error encountered
-func (n *Navigator) ByStops(src, dest StationID) (graph.Path, error) {
+// byStops gives the shortest pathes by number of stops, or any error encountered.
+// If all is set false, return the shortest path by Graph.BFS; otherwise return all pathes
+// ordered by number of stops by Graph.DijkstraAll
+func (n *Navigator) byStops(src, dest StationID, all bool) ([]graph.Path, error) {
 	g := buildGraph(n.allStations, TravelCostByStop{})
-	return g.BFS(src, dest)
+
+	if all {
+		return g.DijkstraAll(src, dest)
+	}
+
+	p, err := g.BFS(src, dest)
+	return []graph.Path{p}, err
 }
 
-// ByTime gives the fatest pathes by time taken, or any error encountered, knowing the time of travel.
-// If all is set false, return only the fastest path; otherwise return all pathes ordered by time taken.
-func (n *Navigator) ByTime(src, dest StationID, t time.Time, all bool) ([]graph.Path, error) {
+// byTime gives the fatest pathes by time taken, or any error encountered, knowing the time of travel.
+// If all is set false, return the fastest path by Graph.Dijkstra; otherwise return all pathes
+// ordered by time take with Graph.DijkstraAll
+func (n *Navigator) byTime(src, dest StationID, t time.Time, all bool) ([]graph.Path, error) {
 	// get opening stations at the time of travel
 	openingStations := []Station{}
 	for _, station := range n.allStations {
@@ -44,12 +53,10 @@ func (n *Navigator) ByTime(src, dest StationID, t time.Time, all bool) ([]graph.
 
 	g := buildGraph(openingStations, getTravelCostByTime(t))
 
-	// use Graph.DijkstraAll to find all pathes if all flag is set
 	if all {
 		return g.DijkstraAll(src, dest)
 	}
 
-	// otherwise, use Graph.Dijkstra to get only the fatest
 	p, err := g.Dijkstra(src, dest)
 
 	return []graph.Path{p}, err
