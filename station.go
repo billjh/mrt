@@ -122,14 +122,14 @@ func loadAllStations() []Station {
 }
 
 // searchStations is a helper function to retrieve StationIDs for given string,
-// and returns error when not found
-func searchStations(stations []Station, input string) ([]StationID, error) {
+// returns a bool to indicate if input is StationID, and error when not found.
+func searchStations(stations []Station, input string) ([]StationID, bool, error) {
 	// first try search by StationID
 	id, err := NewStationID(input)
 	if err == nil {
 		for _, s := range stations {
 			if s.id == id {
-				return []StationID{id}, nil
+				return []StationID{id}, true, nil
 			}
 		}
 	}
@@ -141,8 +141,8 @@ func searchStations(stations []Station, input string) ([]StationID, error) {
 		}
 	}
 	if len(result) > 0 {
-		return result, nil
+		return result, false, nil
 	}
 	// return error when both searches failed
-	return nil, errors.New("stations not found")
+	return nil, false, errors.New("stations not found")
 }

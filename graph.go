@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"math"
 	"sort"
 )
@@ -71,18 +70,24 @@ var ErrorSourceDestinationSame = errors.New("source and destination are the same
 // ErrorPathNotFound is returned by path-finding algorithms when no path exists.
 var ErrorPathNotFound = errors.New("path not found")
 
-// validate the source and destination for path finding algorithms
-func validate(g *Graph, src, dest VertexID) error {
-	if _, ok := g.Vertices[src]; !ok {
-		return ErrorSourceNotFound
+// UnweightedSearch use Graph.BFS when all is false; otherwise use
+// Graph.DijkstraAll
+func (g *Graph) UnweightedSearch(src, dest VertexID, all bool) ([]Path, error) {
+	if all {
+		return g.DijkstraAll(src, dest)
 	}
-	if _, ok := g.Vertices[dest]; !ok {
-		return ErrorDestinationNotFound
+	p, err := g.BFS(src, dest)
+	return []Path{p}, err
+}
+
+// WeightedSearch use Graph.Dijkstra when all is false; otherwise use
+// Graph.DijkstraAll
+func (g *Graph) WeightedSearch(src, dest VertexID, all bool) ([]Path, error) {
+	if all {
+		return g.DijkstraAll(src, dest)
 	}
-	if src == dest {
-		return ErrorSourceDestinationSame
-	}
-	return nil
+	p, err := g.Dijkstra(src, dest)
+	return []Path{p}, err
 }
 
 // BFS finds the shortest path from source to destination and ignores edge weights.
@@ -202,7 +207,6 @@ func (g *Graph) DijkstraAll(src, dest VertexID) ([]Path, error) {
 
 			// record down the all the paths
 			if neighbor == dest {
-				fmt.Println(current)
 				p := append(g.backtrack(current, parent), *g.Vertices[dest])
 				paths = append(paths, Path{
 					Stops:  p,
@@ -227,6 +231,20 @@ func (g *Graph) DijkstraAll(src, dest VertexID) ([]Path, error) {
 	// sort the paths by weight in descending order
 	sort.Slice(paths, func(i, j int) bool { return paths[i].Weight < paths[j].Weight })
 	return paths, nil
+}
+
+// validate the source and destination for path finding algorithms
+func validate(g *Graph, src, dest VertexID) error {
+	if _, ok := g.Vertices[src]; !ok {
+		return ErrorSourceNotFound
+	}
+	if _, ok := g.Vertices[dest]; !ok {
+		return ErrorDestinationNotFound
+	}
+	if src == dest {
+		return ErrorSourceDestinationSame
+	}
+	return nil
 }
 
 // backtrack is a helper function which constructs the path with parent map

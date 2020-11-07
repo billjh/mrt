@@ -146,116 +146,184 @@ func TestBuildGraph(t *testing.T) {
 	}
 }
 
-func TestByStops(t *testing.T) {
+type ExpectedPath struct {
+	path   []string
+	weight Weight
+}
+
+func TestNavigateByStops(t *testing.T) {
 	for _, testCase := range []struct {
-		src      StationID
-		dest     StationID
-		expected []string
+		src         string
+		dest        string
+		all         bool
+		expectError bool
+		expected    []ExpectedPath
 	}{
 		{
-			src:      StationID{line: "CC", number: 21},
-			dest:     StationID{line: "DT", number: 14},
-			expected: []string{"CC21", "CC20", "CC19", "DT9", "DT10", "DT11", "DT12", "DT13", "DT14"},
+			src:         "???",
+			dest:        "Lakeside",
+			expectError: true,
+		},
+		{
+			src:         "Lakeside",
+			dest:        "???",
+			expectError: true,
+		},
+		{
+			src:         "Chinatown",
+			dest:        "Chinatown",
+			expectError: true,
+		},
+		{
+			src:         "NE4",
+			dest:        "Chinatown",
+			expectError: true,
+		},
+		{
+			src:  "NE4",
+			dest: "DT19",
+			all:  false,
+			expected: []ExpectedPath{
+				ExpectedPath{weight: 1, path: []string{"NE4", "DT19"}},
+			},
+		},
+		{
+			src:  "CC21",
+			dest: "DT14",
+			all:  false,
+			expected: []ExpectedPath{
+				ExpectedPath{weight: 8, path: []string{"CC21", "CC20", "CC19", "DT9", "DT10", "DT11", "DT12", "DT13", "DT14"}},
+			},
+		},
+		{
+			src:  "Jurong East",
+			dest: "HarbourFront",
+			all:  true,
+			expected: []ExpectedPath{
+				ExpectedPath{weight: 10, path: []string{"EW24", "EW23", "EW22", "EW21", "EW20", "EW19", "EW18", "EW17", "EW16", "NE3", "NE1"}},
+				ExpectedPath{weight: 11, path: []string{"EW24", "EW23", "EW22", "EW21", "CC22", "CC23", "CC24", "CC25", "CC26", "CC27", "CC28", "CC29"}},
+			},
 		},
 	} {
-		path, err := NewNavigator().byStops(testCase.src, testCase.dest, false)
-		if err != nil {
-			t.Error(err)
-		}
-		actual := pathToStringSlice(path[0].Stops)
-		if !reflect.DeepEqual(testCase.expected, actual) {
-			t.Errorf("expected: %v, actual: %v", testCase.expected, actual)
+		paths, err := NewNavigator().NavigateByStops(testCase.src, testCase.dest, testCase.all)
+		if testCase.expectError {
+			if err == nil {
+				t.Errorf("expect error '%s' to '%s'", testCase.src, testCase.dest)
+			}
+		} else {
+			actual := []ExpectedPath{}
+			for _, p := range paths {
+				actual = append(actual, ExpectedPath{path: pathToStringSlice(p.Stops), weight: p.Weight})
+			}
+			if !reflect.DeepEqual(testCase.expected, actual) {
+				t.Errorf("\nexpected: %v, \n  actual: %v", testCase.expected, actual)
+			}
 		}
 	}
 }
 
-func TestByTime(t *testing.T) {
+func TestNavigateByTime(t *testing.T) {
 	peakHours := "2020-11-09T06:01"
 	nightHours := "2020-11-09T05:59"
 	nonPeakHours := "2020-11-08T06:01"
+
 	for _, testCase := range []struct {
-		src      StationID
-		dest     StationID
-		timeStr  string
-		expected []string
-		weight   Weight
+		src         string
+		dest        string
+		timeStr     string
+		all         bool
+		expectError bool
+		expected    []ExpectedPath
 	}{
 		{
-			src:      StationID{line: "EW", number: 27},
-			dest:     StationID{line: "DT", number: 12},
-			timeStr:  peakHours,
-			expected: []string{"EW27", "EW26", "EW25", "EW24", "EW23", "EW22", "EW21", "CC22", "CC21", "CC20", "CC19", "DT9", "DT10", "DT11", "DT12"},
-			weight:   150,
+			src:         "???",
+			dest:        "Lakeside",
+			timeStr:     peakHours,
+			expectError: true,
 		},
 		{
-			src:      StationID{line: "CC", number: 19},
-			dest:     StationID{line: "CC", number: 4},
-			timeStr:  nonPeakHours,
-			expected: []string{"CC19", "DT9", "DT10", "DT11", "DT12", "DT13", "DT14", "DT15", "CC4"},
-			weight:   68,
+			src:         "Lakeside",
+			dest:        "???",
+			timeStr:     peakHours,
+			expectError: true,
 		},
 		{
-			src:      StationID{line: "CC", number: 19},
-			dest:     StationID{line: "CC", number: 4},
-			timeStr:  nightHours,
-			expected: []string{"CC19", "CC17", "CC16", "CC15", "CC14", "CC13", "CC12", "CC11", "CC10", "CC9", "CC8", "CC7", "CC6", "CC5", "CC4"},
-			weight:   140,
+			src:         "Chinatown",
+			dest:        "Chinatown",
+			timeStr:     peakHours,
+			expectError: true,
+		},
+		{
+			src:         "NE4",
+			dest:        "Chinatown",
+			timeStr:     peakHours,
+			expectError: true,
+		},
+		{
+			src:     "EW27",
+			dest:    "DT12",
+			timeStr: peakHours,
+			all:     false,
+			expected: []ExpectedPath{
+				ExpectedPath{weight: 150, path: []string{"EW27", "EW26", "EW25", "EW24", "EW23", "EW22", "EW21", "CC22", "CC21", "CC20", "CC19", "DT9", "DT10", "DT11", "DT12"}},
+			},
+		},
+		{
+			src:     "CC19",
+			dest:    "CC4",
+			timeStr: nonPeakHours,
+			all:     false,
+			expected: []ExpectedPath{
+				ExpectedPath{weight: 68, path: []string{"CC19", "DT9", "DT10", "DT11", "DT12", "DT13", "DT14", "DT15", "CC4"}},
+			},
+		},
+		{
+			src:     "CC19",
+			dest:    "CC4",
+			timeStr: nightHours,
+			all:     false,
+			expected: []ExpectedPath{
+				ExpectedPath{weight: 140, path: []string{"CC19", "CC17", "CC16", "CC15", "CC14", "CC13", "CC12", "CC11", "CC10", "CC9", "CC8", "CC7", "CC6", "CC5", "CC4"}},
+			},
+		},
+		{
+			src:     "Boon Lay",
+			dest:    "Little India",
+			timeStr: peakHours,
+			all:     false,
+			expected: []ExpectedPath{
+				ExpectedPath{weight: 150, path: []string{"EW27", "EW26", "EW25", "EW24", "EW23", "EW22", "EW21", "CC22", "CC21", "CC20", "CC19", "DT9", "DT10", "DT11", "DT12"}},
+			},
+		},
+		{
+			src:     "Jurong East",
+			dest:    "HarbourFront",
+			timeStr: peakHours,
+			all:     true,
+			expected: []ExpectedPath{
+				ExpectedPath{weight: 107, path: []string{"EW24", "EW23", "EW22", "EW21", "EW20", "EW19", "EW18", "EW17", "EW16", "NE3", "NE1"}},
+				ExpectedPath{weight: 115, path: []string{"EW24", "EW23", "EW22", "EW21", "CC22", "CC23", "CC24", "CC25", "CC26", "CC27", "CC28", "CC29"}},
+			},
 		},
 	} {
 		travelTime, err := time.Parse("2006-01-02T15:04", testCase.timeStr)
 		if err != nil {
 			t.Error(err)
 		}
-		path, err := NewNavigator().byTime(testCase.src, testCase.dest, travelTime, false)
-		if err != nil {
-			t.Error(err)
+		paths, err := NewNavigator().NavigateByTime(testCase.src, testCase.dest, travelTime, testCase.all)
+		if testCase.expectError {
+			if err == nil {
+				t.Errorf("expect error '%s' to '%s'", testCase.src, testCase.dest)
+			}
+		} else {
+			actual := []ExpectedPath{}
+			for _, p := range paths {
+				actual = append(actual, ExpectedPath{path: pathToStringSlice(p.Stops), weight: p.Weight})
+			}
+			if !reflect.DeepEqual(testCase.expected, actual) {
+				t.Errorf("\nexpected: %v, \n  actual: %v", testCase.expected, actual)
+			}
 		}
-		actual := pathToStringSlice(path[0].Stops)
-		if !reflect.DeepEqual(testCase.expected, actual) {
-			t.Errorf("\nexpected: %v, \n  actual: %v", testCase.expected, actual)
-		}
-		if path[0].Weight != testCase.weight {
-			t.Errorf("travel time expected: %d, actual: %d", testCase.weight, path[0].Weight)
-		}
-	}
-}
-
-func TestByTimeAll(t *testing.T) {
-	peakHours, _ := time.Parse("2006-01-02T15:04", "2020-11-09T06:01")
-	src := StationID{line: "DT", number: 1}
-	dest := StationID{line: "EW", number: 15}
-	expected := []struct {
-		path   []string
-		weight Weight
-	}{
-		{
-			path:   []string{"DT1", "DT2", "DT3", "DT5", "DT6", "DT7", "DT8", "DT9", "DT10", "DT11", "DT12", "DT13", "DT14", "EW12", "EW13", "EW14", "EW15"},
-			weight: 165,
-		},
-		{
-			path:   []string{"DT1", "DT2", "DT3", "DT5", "DT6", "DT7", "DT8", "DT9", "DT10", "DT11", "DT12", "NE7", "NE6", "NE5", "NE4", "NE3", "EW16", "EW15"},
-			weight: 188,
-		},
-	}
-	paths, err := NewNavigator().byTime(src, dest, peakHours, true)
-	if err != nil {
-		t.Error(err)
-	}
-	actual := []struct {
-		path   []string
-		weight Weight
-	}{}
-	for _, p := range paths {
-		actual = append(actual, struct {
-			path   []string
-			weight Weight
-		}{
-			path:   pathToStringSlice(p.Stops),
-			weight: p.Weight,
-		})
-	}
-	if !reflect.DeepEqual(actual, expected) {
-		t.Errorf("\nexpected: %v\n  actual: %v", expected, actual)
 	}
 }
 

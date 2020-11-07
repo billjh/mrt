@@ -116,6 +116,7 @@ func TestSearchStations(t *testing.T) {
 	for _, testCase := range []struct {
 		input       string
 		expected    []StationID
+		expectIsID  bool
 		expectError bool
 	}{
 		// error cases
@@ -129,15 +130,17 @@ func TestSearchStations(t *testing.T) {
 		},
 		// success cases
 		{
-			input:    "DT14",
-			expected: []StationID{StationID{line: "DT", number: 14}},
+			input:      "DT14",
+			expected:   []StationID{StationID{line: "DT", number: 14}},
+			expectIsID: true,
 		},
 		{
-			input:    "Bugis",
-			expected: []StationID{StationID{line: "DT", number: 14}, StationID{line: "EW", number: 12}},
+			input:      "Bugis",
+			expected:   []StationID{StationID{line: "DT", number: 14}, StationID{line: "EW", number: 12}},
+			expectIsID: false,
 		},
 	} {
-		actual, err := searchStations(stations, testCase.input)
+		actual, isID, err := searchStations(stations, testCase.input)
 		if testCase.expectError {
 			// test error case
 			if err == nil {
@@ -149,6 +152,8 @@ func TestSearchStations(t *testing.T) {
 				t.Errorf("not expect error on %s", testCase.input)
 			} else if !reflect.DeepEqual(actual, testCase.expected) {
 				t.Errorf("expect: %v, actual: %v", testCase.expected, actual)
+			} else if isID != testCase.expectIsID {
+				t.Errorf("expect isID not match, expect: %v, actual: %v", testCase.expectIsID, isID)
 			}
 		}
 	}
