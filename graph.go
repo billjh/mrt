@@ -60,16 +60,16 @@ type Path struct {
 }
 
 // ErrorSourceNotFound is returned by path-finding algorithms when source does not exist in graph.
-var ErrorSourceNotFound = errors.New("source not found in graph")
+var ErrorSourceNotFound = errors.New("source not found")
 
 // ErrorDestinationNotFound is returned by path-finding algorithms when destination does not exist in graph.
-var ErrorDestinationNotFound = errors.New("destination not found in graph")
+var ErrorDestinationNotFound = errors.New("destination not found")
 
 // ErrorSourceDestinationSame is returned by path-finding algorithms when source and destinatino is the same.
 var ErrorSourceDestinationSame = errors.New("source and destination are the same")
 
 // ErrorPathNotFound is returned by path-finding algorithms when no path exists.
-var ErrorPathNotFound = errors.New("path no found")
+var ErrorPathNotFound = errors.New("path not found")
 
 // validate the source and destination for path finding algorithms
 func validate(g *Graph, src, dest VertexID) error {
