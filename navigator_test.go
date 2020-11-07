@@ -222,6 +222,45 @@ func TestByTime(t *testing.T) {
 	}
 }
 
+func TestByTimeAll(t *testing.T) {
+	peakHours, _ := time.Parse("2006-01-02T15:04", "2020-11-09T06:01")
+	src := StationID{line: "DT", number: 1}
+	dest := StationID{line: "EW", number: 15}
+	expected := []struct {
+		path   []string
+		weight graph.Weight
+	}{
+		{
+			path:   []string{"DT1", "DT2", "DT3", "DT5", "DT6", "DT7", "DT8", "DT9", "DT10", "DT11", "DT12", "DT13", "DT14", "EW12", "EW13", "EW14", "EW15"},
+			weight: 165,
+		},
+		{
+			path:   []string{"DT1", "DT2", "DT3", "DT5", "DT6", "DT7", "DT8", "DT9", "DT10", "DT11", "DT12", "NE7", "NE6", "NE5", "NE4", "NE3", "EW16", "EW15"},
+			weight: 188,
+		},
+	}
+	paths, err := NewNavigator().ByTime(src, dest, peakHours, true)
+	if err != nil {
+		t.Error(err)
+	}
+	actual := []struct {
+		path   []string
+		weight graph.Weight
+	}{}
+	for _, p := range paths {
+		actual = append(actual, struct {
+			path   []string
+			weight graph.Weight
+		}{
+			path:   pathToStringSlice(p.Stops),
+			weight: p.Weight,
+		})
+	}
+	if !reflect.DeepEqual(actual, expected) {
+		t.Errorf("\nexpected: %v\n  actual: %v", expected, actual)
+	}
+}
+
 // pathToStringSlice is a helper function convert graph.Path to station codes in string
 func pathToStringSlice(path []graph.Vertex) []string {
 	actual := []string{}

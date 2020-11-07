@@ -195,6 +195,11 @@ func (g *Graph) DijkstraAll(src, dest VertexID) ([]Path, error) {
 		}
 
 		for neighbor, edgeWeight := range g.Edges[current] {
+			// do not explore neighbors of destination
+			if current == dest {
+				break
+			}
+
 			// record down the all the paths
 			if neighbor == dest {
 				fmt.Println(current)
