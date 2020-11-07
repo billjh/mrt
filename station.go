@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/csv"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -118,4 +119,30 @@ func loadAllStations() []Station {
 		panic(err)
 	}
 	return allStations
+}
+
+// searchStations is a helper function to retrieve StationIDs for given string,
+// and returns error when not found
+func searchStations(stations []Station, input string) ([]StationID, error) {
+	// first try search by StationID
+	id, err := NewStationID(input)
+	if err == nil {
+		for _, s := range stations {
+			if s.id == id {
+				return []StationID{id}, nil
+			}
+		}
+	}
+	// then try search by Station name
+	result := []StationID{}
+	for _, s := range stations {
+		if s.name == input {
+			result = append(result, s.id)
+		}
+	}
+	if len(result) > 0 {
+		return result, nil
+	}
+	// return error when both searches failed
+	return nil, errors.New("stations not found")
 }

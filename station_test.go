@@ -1,6 +1,7 @@
 package main
 
 import (
+	"reflect"
 	"strings"
 	"testing"
 	"time"
@@ -96,6 +97,58 @@ func TestReadStations(t *testing.T) {
 		for i, actual := range s {
 			if actual != testCase.expected[i] {
 				t.Errorf("item not match, expected: %v, actual: %v", testCase.expected[i], actual)
+			}
+		}
+	}
+}
+
+func TestSearchStations(t *testing.T) {
+	stations := []Station{
+		Station{
+			id:   StationID{line: "DT", number: 14},
+			name: "Bugis",
+		},
+		Station{
+			id:   StationID{line: "EW", number: 12},
+			name: "Bugis",
+		},
+	}
+	for _, testCase := range []struct {
+		input       string
+		expected    []StationID
+		expectError bool
+	}{
+		// error cases
+		{
+			input:       "NE1",
+			expectError: true,
+		},
+		{
+			input:       "Habourfront",
+			expectError: true,
+		},
+		// success cases
+		{
+			input:    "DT14",
+			expected: []StationID{StationID{line: "DT", number: 14}},
+		},
+		{
+			input:    "Bugis",
+			expected: []StationID{StationID{line: "DT", number: 14}, StationID{line: "EW", number: 12}},
+		},
+	} {
+		actual, err := searchStations(stations, testCase.input)
+		if testCase.expectError {
+			// test error case
+			if err == nil {
+				t.Errorf("expect error on %s", testCase.input)
+			}
+		} else {
+			// test success case
+			if err != nil {
+				t.Errorf("not expect error on %s", testCase.input)
+			} else if !reflect.DeepEqual(actual, testCase.expected) {
+				t.Errorf("expect: %v, actual: %v", testCase.expected, actual)
 			}
 		}
 	}
