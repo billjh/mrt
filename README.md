@@ -99,19 +99,19 @@ ok  	github.com/billjh/mrt	0.076s
 Run the benchmarks with `go test -bench=.`.
 
 ```
-➜ go test -bench=.
+➜ go test -bench=. -benchmem
 goos: darwin
 goarch: amd64
 pkg: github.com/billjh/mrt
-BenchmarkGraphBFS-16                 	   31185	     38358 ns/op
-BenchmarkGraphDijkstra-16            	   18516	     64126 ns/op
-BenchmarkGraphDijkstraAll-16         	    6339	    181298 ns/op
-BenchmarkNavigateByStopsSingle-16    	  316515	      3783 ns/op
-BenchmarkNavigateByStopsAll-16       	  315889	      3755 ns/op
-BenchmarkNavigateByTimeSingle-16     	  102135	     11568 ns/op
-BenchmarkNavigateByTimeAll-16        	  102898	     11557 ns/op
+BenchmarkGraphBFS-16                 	   31124	     38314 ns/op	   18532 B/op	      44 allocs/op
+BenchmarkGraphDijkstra-16            	   18567	     64374 ns/op	   17399 B/op	      35 allocs/op
+BenchmarkGraphDijkstraAll-16         	    6351	    180006 ns/op	   39593 B/op	     121 allocs/op
+BenchmarkNavigateByStopsSingle-16    	  315939	      3768 ns/op	    4319 B/op	      56 allocs/op
+BenchmarkNavigateByStopsAll-16       	  314380	      3758 ns/op	    4319 B/op	      56 allocs/op
+BenchmarkNavigateByTimeSingle-16     	  103298	     11543 ns/op	   37067 B/op	      65 allocs/op
+BenchmarkNavigateByTimeAll-16        	  103138	     11575 ns/op	   37067 B/op	      65 allocs/op
 PASS
-ok  	github.com/billjh/mrt	10.084s
+ok  	github.com/billjh/mrt	10.090s
 ```
 
 ## API Design
