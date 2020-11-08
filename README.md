@@ -1,4 +1,4 @@
-# Zendesk MRT Exercise
+# MRT Exercise
 
 Build a navigator for Singapore MRT network.
 
@@ -15,9 +15,9 @@ There are two options to run this web applcation.
 You can build and run the application in Docker container. Make sure you have Docker installed ([Mac and Windows](https://www.docker.com/products/docker-desktop), [Ubuntu](https://docs.docker.com/engine/install/ubuntu/)).
 
 ```
-cd zendesk-mrt
-docker build -t zendesk-mrt .
-docker run -it --rm -p 8080:8080 zendesk-mrt
+cd mrt
+docker build -t mrt .
+docker run -it --rm -p 8080:8080 mrt
 ```
 
 ### Run with Go
@@ -25,7 +25,7 @@ docker run -it --rm -p 8080:8080 zendesk-mrt
 You can run the web server directly with `go run` command if you have Golang installed.
 
 ```
-cd zendesk-mrt
+cd mrt
 go run .
 ```
 
@@ -58,7 +58,7 @@ Run all the tests and access line coverage with `go test -cover`.
 ➜ go test -cover
 PASS
 coverage: 76.5% of statements
-ok  	github.com/billjh/zendesk-mrt	0.076s
+ok  	github.com/billjh/mrt	0.076s
 ```
 
 Run the benchmarks with `go test -bench=.`.
@@ -67,7 +67,7 @@ Run the benchmarks with `go test -bench=.`.
 ➜ go test -bench=.
 goos: darwin
 goarch: amd64
-pkg: github.com/billjh/zendesk-mrt
+pkg: github.com/billjh/mrt
 BenchmarkGraphBFS-16                 	   31185	     38358 ns/op
 BenchmarkGraphDijkstra-16            	   18516	     64126 ns/op
 BenchmarkGraphDijkstraAll-16         	    6339	    181298 ns/op
@@ -76,7 +76,7 @@ BenchmarkNavigateByStopsAll-16       	  315889	      3755 ns/op
 BenchmarkNavigateByTimeSingle-16     	  102135	     11568 ns/op
 BenchmarkNavigateByTimeAll-16        	  102898	     11557 ns/op
 PASS
-ok  	github.com/billjh/zendesk-mrt	10.084s
+ok  	github.com/billjh/mrt	10.084s
 ```
 
 ## API Design

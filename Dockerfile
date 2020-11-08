@@ -14,6 +14,6 @@ WORKDIR /app
 
 COPY ./data ./data
 
-COPY --from=builder /app/app ./zendesk-mrt
+COPY --from=builder /app/app ./mrt
 
-ENTRYPOINT [ "/app/zendesk-mrt" ]
+ENTRYPOINT [ "/app/mrt" ]
