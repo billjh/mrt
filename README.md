@@ -29,6 +29,27 @@ cd zendesk-mrt
 go run .
 ```
 
+### Interact with API (with cURL)
+
+You can use cURL to send request to the running API.
+
+```
+curl -i --data '{"source":"Jurong East", "destination":"HarbourFront","all":false}' http://localhost:8080/api/navigate/v1
+```
+
+<details>
+<summary>Example response</summary>
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Sun, 08 Nov 2020 04:39:29 GMT
+Content-Length: 612
+
+[{"source":"Jurong East","destination":"HarbourFront","stations_travelled":10,"route":["EW24","EW23","EW22","EW21","EW20","EW19","EW18","EW17","EW16","NE3","NE1"],"instructions":["Take EW line from Jurong East to Clementi","Take EW line from Clementi to Dover","Take EW line from Dover to Buona Vista","Take EW line from Buona Vista to Commonwealth","Take EW line from Commonwealth to Queenstown","Take EW line from Queenstown to Redhill","Take EW line from Redhill to Tiong Bahru","Take EW line from Tiong Bahru to Outram Park","Change from EW line to NE line","Take NE line from Outram Park to HarbourFront"]}]
+```
+</details>
+
 ## API Design
 
 This application implements two APIs for querying route between two stations.
