@@ -8,7 +8,7 @@ This is a web application written in Go providing routing suggestions through HT
 
 ## Quick Start
 
-There are two options to run this web applcation.
+There are a few options to run this web applcation.
 
 ### Run with Docker
 
@@ -20,9 +20,18 @@ docker build -t mrt .
 docker run -it --rm -p 8080:8080 mrt
 ```
 
+### Run with Docker Compose
+
+You can run the application using docker-compose. For Mac and Windows, docker-compose comes with [Docker Desktop](https://www.docker.com/products/docker-desktop) installation. For Linux distributions like Ubuntu, follow the [Docker Compose documentation](https://docs.docker.com/compose/install/#install-compose-on-linux-systems).
+
+```
+cd mrt
+docker-compose up
+```
+
 ### Run with Go
 
-You can run the web server directly with `go run` command if you have Golang installed.
+You can run the web server directly with `go run` command if you have Go compiler [installed](https://golang.org/doc/install). Try `brew install go` if you are using Mac.
 
 ```
 cd mrt
