@@ -31,10 +31,12 @@ go run .
 
 ### Interact with API (with cURL)
 
-You can use cURL to send request to the running API.
+You can use cURL to send request to the running APIs.
 
-```
-curl -i --data '{"source":"Jurong East", "destination":"HarbourFront","all":false}' http://localhost:8080/api/navigate/v1
+**Navigate API v1** for routing without time consideration:
+
+```shell
+curl -i --data '{"source":"Jurong East", "destination":"HarbourFront", "all":false}' http://localhost:8080/api/navigate/v1
 ```
 
 <details>
@@ -43,12 +45,32 @@ curl -i --data '{"source":"Jurong East", "destination":"HarbourFront","all":fals
 ```
 HTTP/1.1 200 OK
 Content-Type: application/json
-Date: Sun, 08 Nov 2020 04:39:29 GMT
+Date: Sun, 08 Nov 2020 10:42:39 GMT
 Content-Length: 612
 
 [{"source":"Jurong East","destination":"HarbourFront","stations_travelled":10,"route":["EW24","EW23","EW22","EW21","EW20","EW19","EW18","EW17","EW16","NE3","NE1"],"instructions":["Take EW line from Jurong East to Clementi","Take EW line from Clementi to Dover","Take EW line from Dover to Buona Vista","Take EW line from Buona Vista to Commonwealth","Take EW line from Commonwealth to Queenstown","Take EW line from Queenstown to Redhill","Take EW line from Redhill to Tiong Bahru","Take EW line from Tiong Bahru to Outram Park","Change from EW line to NE line","Take NE line from Outram Park to HarbourFront"]}]
 ```
 </details>
+
+**Navigate API v2** for routing with time consideration:
+
+```shell
+curl -i --data '{"source":"Jurong East", "destination":"HarbourFront", "time":"2020-11-09T18:30", "all":false}' http://localhost:8080/api/navigate/v2
+```
+
+<details>
+<summary>Example response</summary>
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Sun, 08 Nov 2020 10:42:53 GMT
+Content-Length: 602
+
+[{"source":"Jurong East","destination":"HarbourFront","minutes":107,"route":["EW24","EW23","EW22","EW21","EW20","EW19","EW18","EW17","EW16","NE3","NE1"],"instructions":["Take EW line from Jurong East to Clementi","Take EW line from Clementi to Dover","Take EW line from Dover to Buona Vista","Take EW line from Buona Vista to Commonwealth","Take EW line from Commonwealth to Queenstown","Take EW line from Queenstown to Redhill","Take EW line from Redhill to Tiong Bahru","Take EW line from Tiong Bahru to Outram Park","Change from EW line to NE line","Take NE line from Outram Park to HarbourFront"]}]
+```
+</details>
+
 
 ### Running Test and Benchmark
 
