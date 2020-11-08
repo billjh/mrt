@@ -96,7 +96,7 @@ coverage: 76.5% of statements
 ok  	github.com/billjh/mrt	0.076s
 ```
 
-Run the benchmarks with `go test -bench=.`.
+Run the benchmarks with `go test -bench=. -benchmem`.
 
 ```
 ➜ go test -bench=. -benchmem
