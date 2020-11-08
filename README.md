@@ -1,6 +1,6 @@
 # MRT Exercise
 
-[![Build Status](https://travis-ci.org/billjh/mrt.svg?branch=master)](https://travis-ci.org/billjh/mrt)
+[![Build Status](https://travis-ci.org/billjh/mrt.svg?branch=main)](https://travis-ci.org/billjh/mrt)
 [![Go Report Card](https://goreportcard.com/badge/github.com/billjh/mrt)](https://goreportcard.com/report/github.com/billjh/mrt)
 ![Codecov](https://img.shields.io/codecov/c/github/billjh/mrt)
 
