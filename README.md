@@ -50,6 +50,32 @@ Content-Length: 612
 ```
 </details>
 
+### Running Test and Benchmark
+
+Run all the tests and access line coverage with `go test -cover`.
+
+```
+➜ go test -cover
+PASS
+coverage: 76.5% of statements
+ok  	github.com/billjh/zendesk-mrt	0.076s
+```
+
+Run the benchmarks with `go test -bench=`.
+
+```
+➜ go test -bench=.
+goos: darwin
+goarch: amd64
+pkg: github.com/billjh/zendesk-mrt
+BenchmarkNavigateByStopsSingle-16    	  317149	      3801 ns/op
+BenchmarkNavigateByStopsAll-16       	  318637	      3800 ns/op
+BenchmarkNavigateByTimeSingle-16     	  103950	     11482 ns/op
+BenchmarkNavigateByTimeAll-16        	  104034	     11575 ns/op
+PASS
+ok  	github.com/billjh/zendesk-mrt	5.211s
+```
+
 ## API Design
 
 This application implements two APIs for querying route between two stations.
