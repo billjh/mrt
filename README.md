@@ -4,6 +4,31 @@ Build a navigator for Singapore MRT network.
 
 ![mrt_map](./doc/images/mrt_sys_map_3.jpg)
 
+This is a web application written in Go providing routing suggestions through HTTP APIs.
+
+## Quick Start
+
+There are two options to run this web applcation.
+
+### Run with Docker
+
+You can build and run the application in Docker container. Make sure you have Docker installed ([Mac and Windows](https://www.docker.com/products/docker-desktop), [Ubuntu](https://docs.docker.com/engine/install/ubuntu/)).
+
+```
+cd zendesk-mrt
+docker build -t zendesk-mrt .
+docker run -it --rm -p 8080:8080 zendesk-mrt
+```
+
+### Run with Go
+
+You can run the web server directly with `go run` command if you have Golang installed.
+
+```
+cd zendesk-mrt
+go run .
+```
+
 ## API Design
 
 This application implements two APIs for querying route between two stations.
