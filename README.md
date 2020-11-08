@@ -99,19 +99,28 @@ If the _all_ flag is set to false, only the shortest route would be returned in 
 ```
 </details>
 
+#### Response Status Codes
+
+| Status Code     | When                                           |
+|-----------------|------------------------------------------------|
+| 200 OK          | One or more route found                        |
+| 400 Bad Request | Source not found, or destination not found     |
+| 404 Not Found   | Route not found between source and destination |
+
 ### GET /api/navigate/v2
 
 The V2 API accepts GET request on /api/navigate/v2, and return one or more route suggestions ordered by **the estimated travel time** in minutes.
 
 The _source_ and _destination_ field can be either a station name (eg. "Orchard"), or a station code (eg. "NS22"). 
 
-If the _all_ flag is set to "false", only the shortest route would be returned in the array instead.
+If the _all_ flag is set to "false", only the fastest route would be returned in the array instead.
 
 The _time_ field should have format of "YYYY-MM-DDThh:mm" (eg. "2006-01-02T15:04").
 
 The time of travel plays several parts in route searching.
-- Firstly, depends on day in the week (weekday vs. weekend) and time of the day (peak hours, non-peak hours, night hours), the estimiated travel time would be different. Also, some lines are not operating at night, so they would be not considered if travel at night.
-- Secondly, if the date of travel is earlier than stations' opening date, those stations would not be considered available in route searching.
+- Firstly, depends on day in the week (weekday vs. weekend) and time of the day (peak hours, non-peak hours, night hours), the estimiated travel time would be different. 
+- Secondly, some lines are not operating at night, so they would be not considered if travel at night.
+- Thirdly, if the date of travel is earlier than stations' opening date, those stations would not be considered available in route searching.
 
 <details>
 <summary>Example V2 request body</summary>
@@ -196,3 +205,12 @@ The time of travel plays several parts in route searching.
 ]
 ```
 </details>
+
+#### Response Status Codes
+
+| Status Code     | When                                           |
+|-----------------|------------------------------------------------|
+| 200 OK          | One or more route found                        |
+| 400 Bad Request | Source not found, or destination not found     |
+| 400 Bad Request | Fail to parse time from string                 |
+| 404 Not Found   | Route not found between source and destination |
