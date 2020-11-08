@@ -1,0 +1,20 @@
+language: go
+
+go:
+- 1.15
+
+services:
+- docker
+
+stages:
+- test
+
+jobs:
+  include:
+  - stage: test
+    name: Test and Benchmark
+    script: go test -bench=. --benchmem -v
+  - stage: test
+    name: Codecov Report
+    script: go test -race -coverprofile=coverage.txt -covermode=atomic
+    after_success: bash <(curl -s https://codecov.io/bash)
