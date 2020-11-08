@@ -1,5 +1,9 @@
 # MRT Exercise
 
+[![Build Status](https://travis-ci.org/billjh/mrt.svg?branch=master)](https://travis-ci.org/billjh/mrt)
+[![Go Report Card](https://goreportcard.com/badge/github.com/billjh/mrt)](https://goreportcard.com/report/github.com/billjh/mrt)
+![Codecov](https://img.shields.io/codecov/c/github/billjh/mrt)
+
 Build a navigator for Singapore MRT network.
 
 ![mrt_map](./doc/images/mrt_sys_map_3.jpg)
