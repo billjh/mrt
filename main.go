@@ -1,15 +1,18 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 )
 
 func main() {
 	navigator := NewNavigator()
+	httpPort := ":8080"
 
 	http.HandleFunc("/api/navigate/v1", navigator.handleV1)
 	http.HandleFunc("/api/navigate/v2", navigator.handleV2)
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	fmt.Printf("Listening on %s\n", httpPort)
+	log.Fatal(http.ListenAndServe(httpPort, nil))
 }
