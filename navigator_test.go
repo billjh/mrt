@@ -337,29 +337,39 @@ func pathToStringSlice(path []Vertex) []string {
 }
 
 //// Benchmarks on Navigator methods
-var navigatorForBenchmark = NewNavigator()
-var source, destination = "Botanic Garden", "Promenade"
-var travelTime, _ = time.Parse("2006-01-02T15:04", "2020-11-09T06:01")
-
 func BenchmarkNavigateByStopsSingle(b *testing.B) {
+	var navigatorForBenchmark = NewNavigator()
+	var source, destination = "Botanic Garden", "Promenade"
+
 	for i := 0; i < b.N; i++ {
 		navigatorForBenchmark.NavigateByStops(source, destination, false)
 	}
 }
 
 func BenchmarkNavigateByStopsAll(b *testing.B) {
+	var navigatorForBenchmark = NewNavigator()
+	var source, destination = "Botanic Garden", "Promenade"
+
 	for i := 0; i < b.N; i++ {
 		navigatorForBenchmark.NavigateByStops(source, destination, true)
 	}
 }
 
 func BenchmarkNavigateByTimeSingle(b *testing.B) {
+	var navigatorForBenchmark = NewNavigator()
+	var source, destination = "Botanic Garden", "Promenade"
+	var travelTime, _ = time.Parse("2006-01-02T15:04", "2020-11-09T06:01")
+
 	for i := 0; i < b.N; i++ {
 		navigatorForBenchmark.NavigateByTime(source, destination, travelTime, false)
 	}
 }
 
 func BenchmarkNavigateByTimeAll(b *testing.B) {
+	var navigatorForBenchmark = NewNavigator()
+	var source, destination = "Botanic Garden", "Promenade"
+	var travelTime, _ = time.Parse("2006-01-02T15:04", "2020-11-09T06:01")
+
 	for i := 0; i < b.N; i++ {
 		navigatorForBenchmark.NavigateByTime(source, destination, travelTime, true)
 	}

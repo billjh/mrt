@@ -250,3 +250,34 @@ func TestDijkstraAll(t *testing.T) {
 		}
 	}
 }
+
+//// Benchmarks on path searching algorithms
+func BenchmarkGraphBFS(b *testing.B) {
+	var g = buildGraph(loadAllStations(), TravelCostByStop{})
+	var source = StationID{line: "CC", number: 19}
+	var destination = StationID{line: "DT", number: 15}
+
+	for i := 0; i < b.N; i++ {
+		g.BFS(source, destination)
+	}
+}
+
+func BenchmarkGraphDijkstra(b *testing.B) {
+	var g = buildGraph(loadAllStations(), TravelCostByStop{})
+	var source = StationID{line: "CC", number: 19}
+	var destination = StationID{line: "DT", number: 15}
+
+	for i := 0; i < b.N; i++ {
+		g.Dijkstra(source, destination)
+	}
+}
+
+func BenchmarkGraphDijkstraAll(b *testing.B) {
+	var g = buildGraph(loadAllStations(), TravelCostByStop{})
+	var source = StationID{line: "CC", number: 19}
+	var destination = StationID{line: "DT", number: 15}
+
+	for i := 0; i < b.N; i++ {
+		g.DijkstraAll(source, destination)
+	}
+}

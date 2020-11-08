@@ -68,12 +68,15 @@ Run the benchmarks with `go test -bench=`.
 goos: darwin
 goarch: amd64
 pkg: github.com/billjh/zendesk-mrt
-BenchmarkNavigateByStopsSingle-16    	  317149	      3801 ns/op
-BenchmarkNavigateByStopsAll-16       	  318637	      3800 ns/op
-BenchmarkNavigateByTimeSingle-16     	  103950	     11482 ns/op
-BenchmarkNavigateByTimeAll-16        	  104034	     11575 ns/op
+BenchmarkGraphBFS-16                 	   31185	     38358 ns/op
+BenchmarkGraphDijkstra-16            	   18516	     64126 ns/op
+BenchmarkGraphDijkstraAll-16         	    6339	    181298 ns/op
+BenchmarkNavigateByStopsSingle-16    	  316515	      3783 ns/op
+BenchmarkNavigateByStopsAll-16       	  315889	      3755 ns/op
+BenchmarkNavigateByTimeSingle-16     	  102135	     11568 ns/op
+BenchmarkNavigateByTimeAll-16        	  102898	     11557 ns/op
 PASS
-ok  	github.com/billjh/zendesk-mrt	5.211s
+ok  	github.com/billjh/zendesk-mrt	10.084s
 ```
 
 ## API Design
